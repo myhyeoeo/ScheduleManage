@@ -49,6 +49,6 @@ public class ScheduleController {
             @RequestBody ScheduleRequestDto requestDto
     ) {
         scheduleService.deleteSchedule(id, requestDto);
-        return ResponseEntity.status(HttpStatus.OK).build(); // 또는 HttpStatus.NO_CONTENT 사용 가능
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

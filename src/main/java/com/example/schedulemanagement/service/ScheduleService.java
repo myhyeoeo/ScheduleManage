@@ -54,6 +54,9 @@ public class ScheduleService {
         Schedule schedule = scheduleRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("선택한 일정을 찾을 수 없습니다.")
         );
+        if (!schedule.getPassword().equals(requestDto.getPassword())) {
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+        }
         schedule.update(requestDto.getTitle(), requestDto.getWriter());
         return new ScheduleResponseDto(schedule);
     }
@@ -63,6 +66,9 @@ public class ScheduleService {
         Schedule schedule = scheduleRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("선택한 일정을 찾을 수 없습니다.")
         );
+        if (!schedule.getPassword().equals(requestDto.getPassword())) {
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+        }
         scheduleRepository.delete(schedule);
     }
 }

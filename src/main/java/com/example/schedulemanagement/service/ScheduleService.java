@@ -50,11 +50,19 @@ public class ScheduleService {
     }
 
     @Transactional
-    public ScheduleResponseDto updateSchedule(Long id, ScheduleRequestDto requestDto){
+    public ScheduleResponseDto updateSchedule(Long id, ScheduleRequestDto requestDto) {
         Schedule schedule = scheduleRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("선택한 일정을 찾을 수 없습니다.")
         );
         schedule.update(requestDto.getTitle(), requestDto.getWriter());
         return new ScheduleResponseDto(schedule);
+    }
+
+    @Transactional
+    public void deleteSchedule(Long id, ScheduleRequestDto requestDto) {
+        Schedule schedule = scheduleRepository.findById(id).orElseThrow(
+                () -> new IllegalArgumentException("선택한 일정을 찾을 수 없습니다.")
+        );
+        scheduleRepository.delete(schedule);
     }
 }

@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequiredArgsConstructor // 생성자 주입을 자동으로 해주는 롬복 어노테이션입니다!
+@RequiredArgsConstructor
 public class ScheduleController {
 
     private final ScheduleService scheduleService;
@@ -23,7 +23,7 @@ public class ScheduleController {
     }
 
     @GetMapping("/schedules/{id}")
-    public ResponseEntity<ScheduleResponseDto> getSchedule(@PathVariable Long id){
+    public ResponseEntity<ScheduleResponseDto> getSchedule(@PathVariable Long id) {
         ScheduleResponseDto result = scheduleService.getSchedule(id);
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
@@ -41,5 +41,14 @@ public class ScheduleController {
     ) {
         ScheduleResponseDto result = scheduleService.updateSchedule(id, requestDto);
         return ResponseEntity.status(HttpStatus.OK).body(result);
+    }
+
+    @DeleteMapping("/schedules/{id}")
+    public ResponseEntity<Void> deleteSchedule(
+            @PathVariable Long id,
+            @RequestBody ScheduleRequestDto requestDto
+    ) {
+        scheduleService.deleteSchedule(id, requestDto);
+        return ResponseEntity.status(HttpStatus.OK).build(); // 또는 HttpStatus.NO_CONTENT 사용 가능
     }
 }

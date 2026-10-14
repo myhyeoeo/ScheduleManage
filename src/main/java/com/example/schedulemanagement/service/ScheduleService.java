@@ -7,6 +7,7 @@ import com.example.schedulemanagement.repository.ScheduleRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,5 +47,14 @@ public class ScheduleService {
             responseDtos.add(new ScheduleResponseDto(schedule));
         }
         return responseDtos;
+    }
+
+    @Transactional
+    public ScheduleResponseDto updateSchedule(Long id, ScheduleRequestDto requestDto){
+        Schedule schedule = scheduleRepository.findById(id).orElseThrow(
+                () -> new IllegalArgumentException("선택한 일정을 찾을 수 없습니다.")
+        );
+        schedule.update(requestDto.getTitle(), requestDto.getWriter());
+        return new ScheduleResponseDto(schedule);
     }
 }

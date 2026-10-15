@@ -1,8 +1,11 @@
 package com.example.schedulemanagement.service;
 
+import com.example.schedulemanagement.dto.CommentResponseDto;
 import com.example.schedulemanagement.dto.ScheduleRequestDto;
 import com.example.schedulemanagement.dto.ScheduleResponseDto;
+import com.example.schedulemanagement.entity.Comment;
 import com.example.schedulemanagement.entity.Schedule;
+import com.example.schedulemanagement.repository.CommentRepository;
 import com.example.schedulemanagement.repository.ScheduleRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
@@ -14,9 +17,11 @@ import java.util.List;
 @Service
 public class ScheduleService {
     private final ScheduleRepository scheduleRepository;
+    private final CommentRepository commentRepository;
 
-    public ScheduleService(ScheduleRepository scheduleRepository) {
+    public ScheduleService(ScheduleRepository scheduleRepository, CommentRepository commentRepository) {
         this.scheduleRepository = scheduleRepository;
+        this.commentRepository = commentRepository;
     }
 
     @Transactional
@@ -32,12 +37,30 @@ public class ScheduleService {
 
         return new ScheduleResponseDto(savedSchedule);
     }
-
+    @Transactional
     public ScheduleResponseDto getSchedule(Long id) {
         Schedule schedule = scheduleRepository.findById(id).orElseThrow(
                 () -> new IllegalStateException("선택한 일정이 존재하지 않습니다")
         );
-        return new ScheduleResponseDto(schedule);
+
+        List<Comment> comments = commentRepository.findByScheduleId(id);
+        List<CommentResponseDto> commentResponseDtos = new ArrayList<>();
+        for (Comment comment : comments) {
+            CommentResponseDto dto = new CommentResponseDto(
+                    comment.getId(),
+                    comment.getScheduleId(),
+                    comment.getContent(),
+                    comment.getWriter(),
+                    comment.getCreatedAt(),
+                    comment.getModifiedAt()
+            );
+            commentResponseDtos.add(dto);
+        }
+
+        return new ScheduleResponseDto(
+                schedule,
+                commentResponseDtos
+        );
     }
 
     public List<ScheduleResponseDto> getSchedules() {

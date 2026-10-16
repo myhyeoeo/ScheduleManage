@@ -73,4 +73,4 @@ Response Body: 204 No Content
     }
 
 
-![ERD](images/Copy of 123.png)
+![ERD](/images/ERD.png)

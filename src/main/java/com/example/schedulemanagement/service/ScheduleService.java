@@ -7,8 +7,8 @@ import com.example.schedulemanagement.entity.Comment;
 import com.example.schedulemanagement.entity.Schedule;
 import com.example.schedulemanagement.repository.CommentRepository;
 import com.example.schedulemanagement.repository.ScheduleRepository;
-import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -37,7 +37,7 @@ public class ScheduleService {
 
         return new ScheduleResponseDto(savedSchedule);
     }
-    @Transactional
+    @Transactional(readOnly = true)
     public ScheduleResponseDto getSchedule(Long id) {
         Schedule schedule = scheduleRepository.findById(id).orElseThrow(
                 () -> new IllegalStateException("선택한 일정이 존재하지 않습니다")
@@ -63,6 +63,7 @@ public class ScheduleService {
         );
     }
 
+    @Transactional(readOnly = true)
     public List<ScheduleResponseDto> getSchedules() {
         List<Schedule> schedules = scheduleRepository.findAll();
         List<ScheduleResponseDto> responseDtos = new ArrayList<>();
